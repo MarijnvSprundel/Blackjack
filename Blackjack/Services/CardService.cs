@@ -1,6 +1,6 @@
 ﻿namespace Blackjack.Services;
 
-using Blackjack.Structs;
+using Blackjack.Models;
 
 public static class CardService
 {

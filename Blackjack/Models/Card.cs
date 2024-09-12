@@ -1,9 +1,9 @@
 ﻿using Blackjack.Enums;
 using Blackjack.Services;
 
-namespace Blackjack.Structs;
+namespace Blackjack.Models;
 
-public struct Card
+public class Card
 {
     public Card(CardSuit suit, CardType type)
     {
@@ -14,8 +14,10 @@ public struct Card
     public CardSuit Suit { get; init; }
     public CardType Type { get; init; }
 
+    public bool Hidden = false;
+
     public override string ToString()
     {
-        return Suit.GetString() + " " + Type.GetString();
+        return Hidden ? "****" : Suit.GetString() + " " + Type.GetString();
     }
 }
