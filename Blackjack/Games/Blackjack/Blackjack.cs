@@ -18,7 +18,7 @@ public class Blackjack
     
     public void Run()
     {
-        Initialize();
+        DrawCards();
         QuickInput();
         
         foreach (var player in _players)
@@ -39,7 +39,7 @@ public class Blackjack
         Summary();
     }
 
-    private void Initialize()
+    private void DrawCards()
     {
         _deck.Shuffle();
 

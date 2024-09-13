@@ -52,4 +52,6 @@ public static class PlayerService
         
         return name;
     }
+    
+    // Maybe add a method for grabbing points from a player
 }
