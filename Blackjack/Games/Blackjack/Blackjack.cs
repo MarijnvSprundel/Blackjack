@@ -50,7 +50,7 @@ public class Blackjack
             success = int.TryParse(Input(text, false), out amount);
 
             if (!success) QuickInput("Please enter a valid number.", false);
-        } while (!success);
+        } while (success == false);
 
         return amount;
     }
@@ -64,7 +64,8 @@ public class Blackjack
 
         foreach (var player in _players)
         {
-            player.CardSets.Add(new ValuedCards([_deck.Draw(), _deck.Draw()], InsertMoney(player)));
+            int value = InsertMoney(player);
+            player.CardSets.Add(new ValuedCards([_deck.Draw(), _deck.Draw()], value));
         }
     }
 
