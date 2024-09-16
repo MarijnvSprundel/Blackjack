@@ -4,18 +4,29 @@ namespace Blackjack.Games.Blackjack.Models;
 
 public class BlackjackPlayer(string name) : Player(name)
 {
-    public List<Card> Cards { get; set; } = [];
+    public List<ValuedCards> CardSets = [];
 
-    public bool Stood { get; set; } = false;
-    
-    public bool DoubledDown { get; set; } = false;
-    
-    public bool Busted { get; set; } = false;
+    private int _activeCardSet = 0;
 
     public override string ToString() => Prefix() + Name;
 
+    public ValuedCards Cards() => CardSets[_activeCardSet];
+
+    public void NextCardSet()
+    {
+        if (Cards().Count == 0) return;
+
+        if (CardSets.ElementAtOrDefault(_activeCardSet + 1) == null)
+        {
+            _activeCardSet = 0;
+            return;
+        }
+        
+        _activeCardSet++;
+    }
+
     private string Prefix()
     {
-        return Busted ? "(Busted) " : string.Empty;
+        return string.Empty;
     }
 }

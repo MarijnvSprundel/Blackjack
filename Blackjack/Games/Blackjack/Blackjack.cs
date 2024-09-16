@@ -15,12 +15,12 @@ public class Blackjack
     {
         _players = players.Select(n => new BlackjackPlayer(n.Name)).ToList();
     }
-    
+
     public void Run()
     {
         DrawCards();
         QuickInput();
-        
+
         foreach (var player in _players)
         {
             do
@@ -28,27 +28,43 @@ public class Blackjack
                 var input = AskInput(player);
 
                 HandleAction(input, player);
-                
-            } while (player is { Busted: false, Stood: false, DoubledDown: false });
+            } while (player.Cards() is { Busted: false, Stood: false, DoubledDown: false });
         }
-        
+
         RevealCard();
 
-        while (BlackjackService.CardsValue(_dealer.Cards) < 17) HandleAction(BlackjackAction.Hit, _dealer);
-        
+        while (BlackjackService.CardsValue(_dealer.Cards()) < 17) HandleAction(BlackjackAction.Hit, _dealer);
+
         Summary();
+    }
+
+    private int InsertMoney(BlackjackPlayer player)
+    {
+        bool success = false;
+        int amount;
+
+        do
+        {
+            var text = player.Name + " is now playing...\nPlace your bets";
+
+            success = int.TryParse(Input(text, false), out amount);
+
+            if (!success) QuickInput("Please enter a valid number.", false);
+        } while (!success);
+
+        return amount;
     }
 
     private void DrawCards()
     {
         _deck.Shuffle();
-
-        _dealer.Cards.AddRange([_deck.Draw(), _deck.Draw()]);
-        _dealer.Cards[1].Hidden = true;
         
+        _dealer.CardSets.Add(new ValuedCards([_deck.Draw(), _deck.Draw()]));
+        _dealer.Cards()[1].Hidden = true;
+
         foreach (var player in _players)
         {
-            player.Cards.AddRange([_deck.Draw(), _deck.Draw()]);
+            player.CardSets.Add(new ValuedCards([_deck.Draw(), _deck.Draw()], InsertMoney(player)));
         }
     }
 
@@ -69,7 +85,7 @@ public class Blackjack
 
             input = null;
         } while (input == null);
-        
+
         return input switch
         {
             "h" => BlackjackAction.Hit,
@@ -81,7 +97,7 @@ public class Blackjack
 
     private void HandleAction(BlackjackAction action, BlackjackPlayer player)
     {
-        switch(action)
+        switch (action)
         {
             case BlackjackAction.Stand:
                 Stand(player);
@@ -94,13 +110,13 @@ public class Blackjack
                 break;
             default: throw new ArgumentException("You've broken it lmaoo");
         }
-        
+
         CheckBust(player);
     }
 
     private void Stand(BlackjackPlayer player)
     {
-        player.Stood = true;
+        player.Cards().Stood = true;
 
         QuickInput(player.Name + " is now standing");
     }
@@ -108,7 +124,7 @@ public class Blackjack
     private void Hit(BlackjackPlayer player)
     {
         var card = _deck.Draw();
-        player.Cards.Add(card);
+        player.Cards().Add(card);
 
         QuickInput(player.Name + " drew and got a " + card);
     }
@@ -116,66 +132,67 @@ public class Blackjack
     private void DoubleDown(BlackjackPlayer player)
     {
         var card = _deck.Draw();
-        player.Cards.Add(card);
-        player.DoubledDown = true;
-        
+        player.Cards().Add(card);
+        player.Cards().DoubledDown = true;
+
         QuickInput(player.Name + " doubled down and got a " + card);
     }
 
     private void CheckBust(BlackjackPlayer player)
     {
-        if (BlackjackService.CardsValue(player.Cards) <= 21) return;
-        
-        player.Busted = true;
-        
+        if (BlackjackService.CardsValue(player.Cards()) <= 21) return;
+
+        player.Cards().Busted = true;
+
         QuickInput(player.Name + " has gone bust");
     }
 
-    private void QuickInput(string? text = null)
+    private void QuickInput(string? text = null, bool displayCards = true)
     {
         Console.Clear();
 
-        DisplayCards();
-        
+        if (displayCards) DrawCards();
+
         if (text != null) Console.WriteLine(text + "\n");
-        
+
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
     }
 
-    private string? Input(string text)
+    private string? Input(string text, bool displayCards = true)
     {
         Console.Clear();
 
-        DisplayCards();
-        
+        if (displayCards) DisplayCards();
+
         Console.WriteLine(text + "\n");
         return Console.ReadLine();
     }
 
     private void DisplayCards()
     {
-        Console.WriteLine(_dealer + " has " + string.Join(", ", _dealer.Cards));
+        Console.WriteLine(_dealer + " has " + string.Join(", ", _dealer.Cards()));
 
         foreach (var player in _players)
         {
-            Console.WriteLine(player + " has " + string.Join(", ", player.Cards) + " (value: " + BlackjackService.CardsValue(player.Cards) + ")\n");
+            Console.WriteLine(player + " has " + string.Join(", ", player.Cards()) + " (value: " +
+                              BlackjackService.CardsValue(player.Cards()) + ")\n");
         }
     }
 
     private void RevealCard()
     {
-        _dealer.Cards[1].Hidden = false;
-        
-        QuickInput("Dealers second card was a " + _dealer.Cards[1]);
+        _dealer.Cards()[1].Hidden = false;
+
+        QuickInput("Dealers second card was a " + _dealer.Cards()[1]);
     }
 
     private bool HasWon(BlackjackPlayer player)
     {
-        if (player.Busted) return false;
-        if (_dealer.Busted) return true;
-        
-        return BlackjackService.CardsValue(player.Cards) >= BlackjackService.CardsValue(_dealer.Cards);
+        if (player.Cards().Busted) return false;
+        if (_dealer.Cards().Busted) return true;
+
+        return BlackjackService.CardsValue(player.Cards()) >= BlackjackService.CardsValue(_dealer.Cards());
     }
 
     private void Summary()
@@ -188,7 +205,7 @@ public class Blackjack
         {
             Console.WriteLine(player + " has " + (HasWon(player) ? "won!" : "lost!"));
         }
-        
+
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
     }
@@ -200,14 +217,14 @@ public class Blackjack
     // u can see your whole 2 cards
     // choose to stand/hit/double down
     // when you go above 21 you bust
-            
+
     // when you have exactly 21 you just continue
     // below you can always hit
     // double down is only available on ur first turn i think
     // when you stand the dealer will start grabbing cards until they are above 17
-            
+
     // ace has two values, 1 and 11. When 11 would make your value above 21 it becomes 1
-            
+
     // so program is 
     // 1. start
     // 2. show cards of user and dealer
@@ -215,7 +232,7 @@ public class Blackjack
     // 4. if user is still under 21 and hasn't standed down yet let em do another choice
     // 5. make dealer start grabbing cards
     // 6. check if user or dealer has won
-            
+
     // when we finish, add value system
     // Move code written here to seperate Blackjack class so we can also start on three card poker
     // then goo goo ga ga
