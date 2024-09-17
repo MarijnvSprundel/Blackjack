@@ -8,7 +8,9 @@ namespace Blackjack
     {
         static void Main(string[] args)
         {
-            new BlackjackGame(PlayerService.InitializePlayers()).Run();
+            var playerPool = PlayerService.InitializePlayers();
+            
+            new BlackjackGame(playerPool).Run();
         }
     }
 }

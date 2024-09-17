@@ -4,13 +4,13 @@ namespace Blackjack.Games.Blackjack.Models;
 
 public class BlackjackPlayer(string name) : Player(name)
 {
-    public List<ValuedCards> CardSets = [];
+    public List<Cards> CardSets = [];
 
     private int _activeCardSet = 0;
 
     public override string ToString() => Prefix() + Name;
 
-    public ValuedCards Cards() => CardSets[_activeCardSet];
+    public Cards Cards() => CardSets[_activeCardSet];
 
     public void NextCardSet()
     {

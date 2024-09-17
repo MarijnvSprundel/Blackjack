@@ -1,5 +1,5 @@
 ﻿using Blackjack.Models;
-using Blackjack.Enums.Blackjack;
+using Blackjack.Games.Blackjack.Enums;
 using Blackjack.Games.Blackjack.Models;
 using Blackjack.Games.Blackjack.Services;
 
@@ -33,7 +33,7 @@ public class Blackjack
 
         RevealCard();
 
-        while (BlackjackService.CardsValue(_dealer.Cards()) < 17) HandleAction(BlackjackAction.Hit, _dealer);
+        while (_dealer.Cards().GetValue() < 17) HandleAction(BlackjackAction.Hit, _dealer);
 
         Summary();
     }
@@ -59,13 +59,13 @@ public class Blackjack
     {
         _deck.Shuffle();
         
-        _dealer.CardSets.Add(new ValuedCards([_deck.Draw(), _deck.Draw()]));
+        _dealer.CardSets.Add(new Cards([_deck.Draw(), _deck.Draw()]));
         _dealer.Cards()[1].Hidden = true;
 
         foreach (var player in _players)
         {
             int value = InsertMoney(player);
-            player.CardSets.Add(new ValuedCards([_deck.Draw(), _deck.Draw()], value));
+            player.CardSets.Add(new Cards([_deck.Draw(), _deck.Draw()], value));
         }
     }
 
@@ -141,7 +141,7 @@ public class Blackjack
 
     private void CheckBust(BlackjackPlayer player)
     {
-        if (BlackjackService.CardsValue(player.Cards()) <= 21) return;
+        if (player.Cards().GetValue() <= 21) return;
 
         player.Cards().Busted = true;
 
@@ -152,7 +152,7 @@ public class Blackjack
     {
         Console.Clear();
 
-        if (displayCards) DrawCards();
+        if (displayCards) DisplayCards();
 
         if (text != null) Console.WriteLine(text + "\n");
 
@@ -177,7 +177,7 @@ public class Blackjack
         foreach (var player in _players)
         {
             Console.WriteLine(player + " has " + string.Join(", ", player.Cards()) + " (value: " +
-                              BlackjackService.CardsValue(player.Cards()) + ")\n");
+                              player.Cards().GetValue() + ")\n");
         }
     }
 
@@ -187,15 +187,7 @@ public class Blackjack
 
         QuickInput("Dealers second card was a " + _dealer.Cards()[1]);
     }
-
-    private bool HasWon(BlackjackPlayer player)
-    {
-        if (player.Cards().Busted) return false;
-        if (_dealer.Cards().Busted) return true;
-
-        return BlackjackService.CardsValue(player.Cards()) >= BlackjackService.CardsValue(_dealer.Cards());
-    }
-
+    
     private void Summary()
     {
         Console.Clear();
@@ -204,7 +196,7 @@ public class Blackjack
 
         foreach (var player in _players)
         {
-            Console.WriteLine(player + " has " + (HasWon(player) ? "won!" : "lost!"));
+            Console.WriteLine(player + " has won " + BlackjackService.GetWinnings(player.Cards(), _dealer.Cards()) + " points");
         }
 
         Console.WriteLine("Press any key to continue...");
@@ -237,6 +229,11 @@ public class Blackjack
     // when we finish, add value system
     // Move code written here to seperate Blackjack class so we can also start on three card poker
     // then goo goo ga ga
+    
+    // Maybe split this fucking class up idk might be becoming large
+    // also add values but the fucker is doing shit it isnt supposed to
+    // like the fucker starts asking for money in the middle of the fucking game
+    // retarded af that shit needs to be fixed
 }
 
 // ITS GOING DOWN IM YELLING TIMBEEEERRR

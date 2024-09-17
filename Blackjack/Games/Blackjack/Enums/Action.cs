@@ -1,4 +1,4 @@
-﻿namespace Blackjack.Enums.Blackjack;
+﻿namespace Blackjack.Games.Blackjack.Enums;
 
 public enum BlackjackAction
 {
