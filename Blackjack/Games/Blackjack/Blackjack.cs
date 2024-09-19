@@ -2,22 +2,21 @@
 using Blackjack.Games.Blackjack.Enums;
 using Blackjack.Games.Blackjack.Models;
 using Blackjack.Games.Blackjack.Services;
+using Blackjack.Interfaces;
 
 namespace Blackjack.Games.Blackjack;
 
-public class Blackjack
+public class Blackjack : IGame
 {
     private Deck _deck = new();
     private BlackjackPlayer _dealer = new("Dealer");
     private List<BlackjackPlayer> _players;
 
-    public Blackjack(List<Player> players)
+    public void Run(List<Player> players)
     {
         _players = players.Select(n => new BlackjackPlayer(n.Name)).ToList();
-    }
 
-    public void Run()
-    {
+        
         DrawCards();
         QuickInput();
 
