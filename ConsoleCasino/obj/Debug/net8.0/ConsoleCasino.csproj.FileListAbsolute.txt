@@ -1,0 +1,15 @@
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\bin\Debug\net8.0\ConsoleCasino.exe
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\bin\Debug\net8.0\ConsoleCasino.deps.json
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\bin\Debug\net8.0\ConsoleCasino.runtimeconfig.json
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\bin\Debug\net8.0\ConsoleCasino.dll
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\bin\Debug\net8.0\ConsoleCasino.pdb
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.AssemblyInfoInputs.cache
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.AssemblyInfo.cs
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.csproj.CoreCompileInputs.cache
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.sourcelink.json
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.dll
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\refint\ConsoleCasino.dll
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.pdb
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ConsoleCasino.genruntimeconfig.cache
+C:\Users\macti\RiderProjects\Blackjack\ConsoleCasino\obj\Debug\net8.0\ref\ConsoleCasino.dll
