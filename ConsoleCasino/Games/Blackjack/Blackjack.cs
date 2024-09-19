@@ -9,12 +9,12 @@ namespace ConsoleCasino.Games.Blackjack;
 public class Blackjack : IGame
 {
     private Deck _deck = new();
-    private BlackjackPlayer _dealer = new("Dealer");
-    private List<BlackjackPlayer> _players;
+    private BlackjackUser _dealer = new("Dealer", "", "");
+    private List<BlackjackUser> _players;
 
-    public void Run(List<Player> players)
+    public void Run(List<User> players)
     {
-        _players = players.Select(n => new BlackjackPlayer(n.Name)).ToList();
+        _players = players.Select(n => new BlackjackUser(n.Name, n.Email, n.Password)).ToList();
 
         
         DrawCards();
@@ -37,14 +37,14 @@ public class Blackjack : IGame
         Summary();
     }
 
-    private int InsertMoney(BlackjackPlayer player)
+    private int InsertMoney(BlackjackUser user)
     {
         bool success = false;
         int amount;
 
         do
         {
-            var text = player.Name + " is now playing...\nPlace your bets";
+            var text = user.Name + " is now playing...\nPlace your bets";
 
             success = int.TryParse(Input(text, false), out amount);
 
@@ -68,14 +68,14 @@ public class Blackjack : IGame
         }
     }
 
-    private BlackjackAction AskInput(BlackjackPlayer player)
+    private BlackjackAction AskInput(BlackjackUser user)
     {
         string? input;
 
         do
         {
             input = Input(
-                player.Name + " is now playing...\nWhat would you like to do? Stand (S), Hit (H) or Double Down (D)?"
+                user.Name + " is now playing...\nWhat would you like to do? Stand (S), Hit (H) or Double Down (D)?"
             )?.ToLower();
 
             if (input == "h" || input == "s" || input == "d")
@@ -95,56 +95,56 @@ public class Blackjack : IGame
         };
     }
 
-    private void HandleAction(BlackjackAction action, BlackjackPlayer player)
+    private void HandleAction(BlackjackAction action, BlackjackUser user)
     {
         switch (action)
         {
             case BlackjackAction.Stand:
-                Stand(player);
+                Stand(user);
                 break;
             case BlackjackAction.Hit:
-                Hit(player);
+                Hit(user);
                 break;
             case BlackjackAction.Double:
-                DoubleDown(player);
+                DoubleDown(user);
                 break;
             default: throw new ArgumentException("You've broken it lmaoo");
         }
 
-        CheckBust(player);
+        CheckBust(user);
     }
 
-    private void Stand(BlackjackPlayer player)
+    private void Stand(BlackjackUser user)
     {
-        player.Cards().Stood = true;
+        user.Cards().Stood = true;
 
-        QuickInput(player.Name + " is now standing");
+        QuickInput(user.Name + " is now standing");
     }
 
-    private void Hit(BlackjackPlayer player)
-    {
-        var card = _deck.Draw();
-        player.Cards().Add(card);
-
-        QuickInput(player.Name + " drew and got a " + card);
-    }
-
-    private void DoubleDown(BlackjackPlayer player)
+    private void Hit(BlackjackUser user)
     {
         var card = _deck.Draw();
-        player.Cards().Add(card);
-        player.Cards().DoubledDown = true;
+        user.Cards().Add(card);
 
-        QuickInput(player.Name + " doubled down and got a " + card);
+        QuickInput(user.Name + " drew and got a " + card);
     }
 
-    private void CheckBust(BlackjackPlayer player)
+    private void DoubleDown(BlackjackUser user)
     {
-        if (player.Cards().GetValue() <= 21) return;
+        var card = _deck.Draw();
+        user.Cards().Add(card);
+        user.Cards().DoubledDown = true;
 
-        player.Cards().Busted = true;
+        QuickInput(user.Name + " doubled down and got a " + card);
+    }
 
-        QuickInput(player.Name + " has gone bust");
+    private void CheckBust(BlackjackUser user)
+    {
+        if (user.Cards().GetValue() <= 21) return;
+
+        user.Cards().Busted = true;
+
+        QuickInput(user.Name + " has gone bust");
     }
 
     private void QuickInput(string? text = null, bool displayCards = true)

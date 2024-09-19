@@ -3,7 +3,8 @@
 public enum Game
 {
     Blackjack,
-    ThreeCardPoker
+    ThreeCardPoker,
+    SlotMachine
 }
 
 public static class EnumExtensions
@@ -14,6 +15,7 @@ public static class EnumExtensions
         {
             Game.Blackjack => "Blackjack",
             Game.ThreeCardPoker => "Three Card Poker",
+            Game.SlotMachine => "Slot Machine",
             _ => "What the flip"
         };
     }

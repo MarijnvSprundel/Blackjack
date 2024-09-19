@@ -4,7 +4,7 @@ namespace ConsoleCasino.Services;
 
 using ConsoleCasino.Models;
 
-public static class CardService
+public class CardService
 {
     public static Card Random()
     {

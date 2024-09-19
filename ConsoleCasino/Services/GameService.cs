@@ -2,7 +2,7 @@
 
 namespace ConsoleCasino.Services;
 
-public static class GameService
+public class GameService
 {
     public static Game SelectGame()
     {

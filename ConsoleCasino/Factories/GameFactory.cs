@@ -1,4 +1,5 @@
 ﻿using ConsoleCasino.Enums;
+using ConsoleCasino.Games.SlotMachine;
 using ConsoleCasino.Games.ThreeCardPoker;
 using ConsoleCasino.Interfaces;
 
@@ -12,6 +13,7 @@ public class GameFactory
         {
             Game.Blackjack => new Games.Blackjack.Blackjack(),
             Game.ThreeCardPoker => new ThreeCardPoker(),
+            Game.SlotMachine => new SlotMachine(),
             _ => throw new NotImplementedException(),
         };
     }

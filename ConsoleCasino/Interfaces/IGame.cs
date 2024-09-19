@@ -4,5 +4,5 @@ namespace ConsoleCasino.Interfaces;
 
 public interface IGame
 {
-    public void Run(List<Player> players);
+    public void Run(List<User> players);
 }

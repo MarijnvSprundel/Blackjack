@@ -1,6 +1,6 @@
 ﻿namespace ConsoleCasino.Services;
 
-public static class ConsoleService
+public class ConsoleService
 {
     public static void AnyKeyToContinue()
     {

@@ -4,7 +4,7 @@ namespace ConsoleCasino.Services;
 
 using ConsoleCasino.Enums;
 
-public static class CardSuitService
+public class CardSuitService
 {
     public static CardSuit Random()
     {

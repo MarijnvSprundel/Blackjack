@@ -2,11 +2,11 @@
 
 namespace ConsoleCasino.Services;
 
-public static class PlayerService
+public class PlayerService
 {
-    public static List<Player> InitializePlayers()
+    public static List<User> InitializePlayers()
     {
-        return Enumerable.Range(0, GetCount()).Select(n => new Player(GetName(n))).ToList();
+        return Enumerable.Range(0, GetCount()).Select(n => new User(GetName(n), "", "")).ToList();
     }
 
     private static int GetCount()

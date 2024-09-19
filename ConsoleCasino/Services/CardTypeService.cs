@@ -4,7 +4,7 @@ namespace ConsoleCasino.Services;
 
 using ConsoleCasino.Enums;
 
-public static class CardTypeService
+public class CardTypeService
 {
     public static CardType Random()
     {
