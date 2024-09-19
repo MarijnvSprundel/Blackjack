@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\macti\\RiderProjects\\Blackjack\\ConsoleCasino\\ConsoleCasino.csproj",
+      "projectUniqueName": "C:\\Users\\macti\\RiderProjects\\ConsoleCasino\\ConsoleCasino\\ConsoleCasino.csproj",
       "projectName": "ConsoleCasino",
-      "projectPath": "C:\\Users\\macti\\RiderProjects\\Blackjack\\ConsoleCasino\\ConsoleCasino.csproj",
+      "projectPath": "C:\\Users\\macti\\RiderProjects\\ConsoleCasino\\ConsoleCasino\\ConsoleCasino.csproj",
       "packagesPath": "C:\\Users\\macti\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\macti\\RiderProjects\\Blackjack\\ConsoleCasino\\obj\\",
+      "outputPath": "C:\\Users\\macti\\RiderProjects\\ConsoleCasino\\ConsoleCasino\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\macti\\AppData\\Roaming\\NuGet\\NuGet.Config"
