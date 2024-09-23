@@ -9,12 +9,12 @@ namespace ConsoleCasino.Games.Blackjack;
 public class Blackjack : IGame
 {
     private Deck _deck = new();
-    private BlackjackUser _dealer = new("Dealer", "", "");
+    private BlackjackUser _dealer = new("Dealer", "", "", "");
     private List<BlackjackUser> _players;
 
     public void Run(List<User> players)
     {
-        _players = players.Select(n => new BlackjackUser(n.Name, n.Email, n.Password)).ToList();
+        _players = players.Select(n => new BlackjackUser(n.Name, n.Email, n.Password, n.PasswordSalt.ToString())).ToList();
 
         
         DrawCards();

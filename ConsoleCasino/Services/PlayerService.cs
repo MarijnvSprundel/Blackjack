@@ -6,7 +6,7 @@ public class PlayerService
 {
     public static List<User> InitializePlayers()
     {
-        return Enumerable.Range(0, GetCount()).Select(n => new User(GetName(n), "", "")).ToList();
+        return Enumerable.Range(0, GetCount()).Select(n => new User(GetName(n), "", "", "")).ToList();
     }
 
     private static int GetCount()

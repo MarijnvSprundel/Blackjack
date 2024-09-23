@@ -2,7 +2,7 @@
 
 namespace ConsoleCasino.Games.Blackjack.Models;
 
-public class BlackjackUser(string name, string email, string password) : User(name, email, password)
+public class BlackjackUser(string name, string email, string password, string passwordSalt) : User(name, email, password, passwordSalt)
 {
     public List<Cards> CardSets = [];
 
