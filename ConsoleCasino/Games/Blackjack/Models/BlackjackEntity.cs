@@ -1,14 +1,13 @@
-﻿using ConsoleCasino.Models;
+﻿using ConsoleCasino.Games.Blackjack.Models;
 
-namespace ConsoleCasino.Games.Blackjack.Models;
+namespace ConsoleCasino.Games.Blackjack.Interfaces;
 
-public class BlackjackUser(string name, string email, string password, string passwordSalt) : User(name, email, password, passwordSalt)
-{
+public abstract class BlackjackEntity {
     public List<Cards> CardSets = [];
 
     private int _activeCardSet = 0;
-
-    public override string ToString() => Prefix() + Name;
+    
+    public override string ToString() => Prefix() + "Entity";
 
     public Cards Cards() => CardSets[_activeCardSet];
 
@@ -25,7 +24,7 @@ public class BlackjackUser(string name, string email, string password, string pa
         _activeCardSet++;
     }
 
-    private string Prefix()
+    public string Prefix()
     {
         return string.Empty;
     }

@@ -1,4 +1,5 @@
 ﻿using ConsoleCasino.Games.Blackjack.Enums;
+using ConsoleCasino.Games.Blackjack.Interfaces;
 using ConsoleCasino.Games.Blackjack.Models;
 using ConsoleCasino.Games.Blackjack.Services;
 using ConsoleCasino.Interfaces;
@@ -6,29 +7,22 @@ using ConsoleCasino.Models;
 
 namespace ConsoleCasino.Games.Blackjack;
 
-public class Blackjack : IGame
-{
+public class Blackjack : IGame {
     private Deck _deck = new();
-    private BlackjackUser _dealer = new("Dealer", "", "", "");
-    private List<BlackjackUser> _players;
+    private BlackjackDealer _dealer = new("Dealer");
+    private BlackjackPlayer _player;
 
-    public void Run(List<User> players)
-    {
-        _players = players.Select(n => new BlackjackUser(n.Name, n.Email, n.Password, n.PasswordSalt.ToString())).ToList();
+    public void Run(User user) {
+        _player = new BlackjackPlayer(user);
 
-        
         DrawCards();
         QuickInput();
 
-        foreach (var player in _players)
-        {
-            do
-            {
-                var input = AskInput(player);
+        do {
+            var input = AskInput(_player);
 
-                HandleAction(input, player);
-            } while (player.Cards() is { Busted: false, Stood: false, DoubledDown: false });
-        }
+            HandleAction(input, _player);
+        } while (_player.Cards() is { Busted: false, Stood: false, DoubledDown: false });
 
         RevealCard();
 
@@ -37,14 +31,12 @@ public class Blackjack : IGame
         Summary();
     }
 
-    private int InsertMoney(BlackjackUser user)
-    {
+    private int InsertMoney(BlackjackPlayer player) {
         bool success = false;
         int amount;
 
-        do
-        {
-            var text = user.Name + " is now playing...\nPlace your bets";
+        do {
+            var text = player + " is now playing...\nPlace your bets";
 
             success = int.TryParse(Input(text, false), out amount);
 
@@ -54,40 +46,32 @@ public class Blackjack : IGame
         return amount;
     }
 
-    private void DrawCards()
-    {
+    private void DrawCards() {
         _deck.Shuffle();
-        
+
         _dealer.CardSets.Add(new Cards([_deck.Draw(), _deck.Draw()]));
         _dealer.Cards()[1].Hidden = true;
 
-        foreach (var player in _players)
-        {
-            int value = InsertMoney(player);
-            player.CardSets.Add(new Cards([_deck.Draw(), _deck.Draw()], value));
-        }
+        int value = InsertMoney(_player);
+        _player.CardSets.Add(new Cards([_deck.Draw(), _deck.Draw()], value));
     }
 
-    private BlackjackAction AskInput(BlackjackUser user)
-    {
+    private BlackjackAction AskInput(BlackjackPlayer player) {
         string? input;
 
-        do
-        {
+        do {
             input = Input(
-                user.Name + " is now playing...\nWhat would you like to do? Stand (S), Hit (H) or Double Down (D)?"
+                player + " is now playing...\nWhat would you like to do? Stand (S), Hit (H) or Double Down (D)?"
             )?.ToLower();
 
-            if (input == "h" || input == "s" || input == "d")
-            {
+            if (input == "h" || input == "s" || input == "d") {
                 break;
             }
 
             input = null;
         } while (input == null);
 
-        return input switch
-        {
+        return input switch {
             "h" => BlackjackAction.Hit,
             "s" => BlackjackAction.Stand,
             "d" => BlackjackAction.Double,
@@ -95,60 +79,53 @@ public class Blackjack : IGame
         };
     }
 
-    private void HandleAction(BlackjackAction action, BlackjackUser user)
-    {
-        switch (action)
-        {
+    private void HandleAction(BlackjackAction action, BlackjackEntity entity) {
+        switch (action) {
             case BlackjackAction.Stand:
-                Stand(user);
+                Stand(entity);
                 break;
             case BlackjackAction.Hit:
-                Hit(user);
+                Hit(entity);
                 break;
             case BlackjackAction.Double:
-                DoubleDown(user);
+                DoubleDown(entity);
                 break;
             default: throw new ArgumentException("You've broken it lmaoo");
         }
 
-        CheckBust(user);
+        CheckBust(entity);
     }
 
-    private void Stand(BlackjackUser user)
-    {
-        user.Cards().Stood = true;
+    private void Stand(BlackjackEntity entity) {
+        entity.Cards().Stood = true;
 
-        QuickInput(user.Name + " is now standing");
+        QuickInput(entity + " is now standing");
     }
 
-    private void Hit(BlackjackUser user)
-    {
+    private void Hit(BlackjackEntity entity) {
         var card = _deck.Draw();
-        user.Cards().Add(card);
+        entity.Cards().Add(card);
 
-        QuickInput(user.Name + " drew and got a " + card);
+        QuickInput(entity + " drew and got a " + card);
     }
 
-    private void DoubleDown(BlackjackUser user)
-    {
+    private void DoubleDown(BlackjackEntity entity) {
         var card = _deck.Draw();
-        user.Cards().Add(card);
-        user.Cards().DoubledDown = true;
+        entity.Cards().Add(card);
+        entity.Cards().DoubledDown = true;
 
-        QuickInput(user.Name + " doubled down and got a " + card);
+        QuickInput(entity + " doubled down and got a " + card);
     }
 
-    private void CheckBust(BlackjackUser user)
-    {
-        if (user.Cards().GetValue() <= 21) return;
+    private void CheckBust(BlackjackEntity entity) {
+        if (entity.Cards().GetValue() <= 21) return;
 
-        user.Cards().Busted = true;
+        entity.Cards().Busted = true;
 
-        QuickInput(user.Name + " has gone bust");
+        QuickInput(entity + " has gone bust");
     }
 
-    private void QuickInput(string? text = null, bool displayCards = true)
-    {
+    private void QuickInput(string? text = null, bool displayCards = true) {
         Console.Clear();
 
         if (displayCards) DisplayCards();
@@ -159,8 +136,7 @@ public class Blackjack : IGame
         Console.ReadKey();
     }
 
-    private string? Input(string text, bool displayCards = true)
-    {
+    private string? Input(string text, bool displayCards = true) {
         Console.Clear();
 
         if (displayCards) DisplayCards();
@@ -169,34 +145,26 @@ public class Blackjack : IGame
         return Console.ReadLine();
     }
 
-    private void DisplayCards()
-    {
+    private void DisplayCards() {
         Console.WriteLine(_dealer + " has " + string.Join(", ", _dealer.Cards()));
 
-        foreach (var player in _players)
-        {
-            Console.WriteLine(player + " has " + string.Join(", ", player.Cards()) + " (value: " +
-                              player.Cards().GetValue() + ")\n");
-        }
+        Console.WriteLine(_player + " has " + string.Join(", ", _player.Cards()) + " (value: " +
+                          _player.Cards().GetValue() + ")\n");
     }
 
-    private void RevealCard()
-    {
+    private void RevealCard() {
         _dealer.Cards()[1].Hidden = false;
 
         QuickInput("Dealers second card was a " + _dealer.Cards()[1]);
     }
-    
-    private void Summary()
-    {
+
+    private void Summary() {
         Console.Clear();
 
         DisplayCards();
 
-        foreach (var player in _players)
-        {
-            Console.WriteLine(player + " has won " + BlackjackService.GetWinnings(player.Cards(), _dealer.Cards()) + " points");
-        }
+        Console.WriteLine(_player + " has won " + BlackjackService.GetWinnings(_player.Cards(), _dealer.Cards()) +
+                          " points");
 
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
@@ -228,7 +196,7 @@ public class Blackjack : IGame
     // when we finish, add value system
     // Move code written here to seperate Blackjack class so we can also start on three card poker
     // then goo goo ga ga
-    
+
     // Maybe split this fucking class up idk might be becoming large
     // also add values but the fucker is doing shit it isnt supposed to
     // like the fucker starts asking for money in the middle of the fucking game

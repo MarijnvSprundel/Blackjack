@@ -5,7 +5,7 @@ namespace ConsoleCasino.Games.ThreeCardPoker;
 
 public class ThreeCardPoker : IGame
 {
-    public void Run(List<User> players)
+    public void Run(User user)
     {
         Console.WriteLine("Hello welcome to this game");
         Console.ReadKey();

@@ -25,6 +25,11 @@ public class HashingService
 
     public static bool VerifyPassword(string password, string hash, byte[] salt)
     {
+        Console.WriteLine(password);
+        Console.WriteLine(hash);
+
+        Console.WriteLine(salt);
+
         var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithmName.SHA512, KeySize);
         
         return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));

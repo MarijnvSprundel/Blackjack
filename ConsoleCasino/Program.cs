@@ -7,19 +7,16 @@ using ConsoleCasino.Factories;
 using ConsoleCasino.Services;
 using BlackjackGame = ConsoleCasino.Games.Blackjack.Blackjack;
 
-namespace ConsoleCasino
-{
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            var players = PlayerService.InitializePlayers();
-            
-            
-            var game = GameService.SelectGame();
+namespace ConsoleCasino;
 
-            GameFactory.CreateGame(game).Run(players);
-        }
+internal class Program
+{
+    static void Main(string[] args) {
+        var user = new AuthService().Login();
+            
+        var game = GameService.SelectGame();
+
+        GameFactory.CreateGame(game).Run(user);
     }
 }
 
